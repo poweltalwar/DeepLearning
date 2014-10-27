@@ -1,4 +1,4 @@
 DeepLearning
 ============
 
-a repo for my B.tech project
+a repository for my B.Tech project
