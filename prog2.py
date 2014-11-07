@@ -1,4 +1,6 @@
+import numpy as np
 from numpy import *
+
 
 def sigmoid(z):
     '''computes the sigmoid function'''
@@ -9,7 +11,7 @@ def sigmoid(z):
 
     
 
-def costFunction(theta, X, y):
+def costFunction(theta, X, y, Lambda):
     '''COSTFUNCTION Compute cost and gradient for logistic regression
     J = COSTFUNCTION(theta, X, y) computes the cost of using theta as the
     parameter for logistic regression and the gradient of the cost
@@ -28,8 +30,11 @@ def costFunction(theta, X, y):
     grad = grad/m
     grad = grad[0]
 
-    J =  -1 * transpose( y ).dot( log(h) ) - transpose( 1-y ).dot( log(1-h) ) 
-    J = J/m
+    J =  -1 * transpose( y ).dot( log(h) ) - transpose( 1-y ).dot( log(1-h) )  
+    J =  J / m
+    theta = np.array( theta );
+    J = J + ( Lambda/(2*m) ) * sum( theta * theta )  ;
+
     
     return  J
 

@@ -25,12 +25,16 @@ X = hstack((X0,X))
 #initialise the fitting parametrers
 initial_theta = zeros( (n + 1, 1) );
 
+#initialise lambda for regularisation
+Lambda = .3;
+
 #compute initial cost and gradient
-cost = costFunction(initial_theta, X, Y)
+cost = costFunction(initial_theta, X, Y, Lambda)
 
 options = {'full_output': True, 'maxiter': 400}
 
-theta, cost, _, _, _ =  optimize.fmin(lambda t: costFunction(t, X, Y), initial_theta, **options)
+
+theta, cost, _, _, _ =  optimize.fmin(lambda t: costFunction(t, X, Y, Lambda ), initial_theta, **options)
 
 p = predict(theta, X)
 
