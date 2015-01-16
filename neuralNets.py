@@ -15,7 +15,6 @@ from pybrain.supervised.trainers import BackpropTrainer
 
 def plotData(X, Y):
     '''plots the input data '''
-
     # plot any one case (20x20 image) from the input
     # the image matrix will have to be transposed to be viewed correcty
     # cmap shows the color map
@@ -30,25 +29,9 @@ def plotData(X, Y):
     return c
 
 
-def splitData(alldata, factor):
-    '''shuffles the data and divides into 2 parts with sizes
-    decided by ratio'''
-        
-    #shuffle data
-    #shuffle(allData)
-
-    #calculate new sizes
-    numrows = len(data)
-    numrow_train = int(numrows*factor)
-
-    #separate the data
-    data1 = data[0:numrow_train,:]
-    data2 = data[numrow_train:numrows,:]
-
-    return data1, data2
-
 
 def convertToOneOfMany(Y):
+    '''converts supervised dataset to softmax classifier'''
     rows, cols = shape(Y)
     numLabels = len(unique(Y))
 
@@ -72,13 +55,13 @@ Y[Y == 10] = 0 # '0' is encoded as '10' in data, fix it
 
 #set sizes of layers
 nInput = n
-nHidden0 = n
+nHidden0 = 5 * n
 nOutput = numLabels
 
 #define layer structures
-inLayer = LinearLayer(n)
-hiddenLayer = SigmoidLayer(10) #set asone for each class or one for each input feature
-outLayer = SoftmaxLayer(numLabels)
+inLayer = LinearLayer(nInput)
+hiddenLayer = SigmoidLayer(nHidden0) #set asone for each class or one for each input feature
+outLayer = SoftmaxLayer(nOutput)
 
 #add layers to network
 net = FeedForwardNetwork()
@@ -97,40 +80,49 @@ net.addConnection(theta2)
 #sort module
 net.sortModules()
 
-#activate by giving input
-#n.activate(X[0])
+#testing befor training
+c = random.randint(0, X.shape[0])
+print("testing without training, choosing a random number\t" + str(c))
+X1 = X[c, :]
+prediction = net.activate(X1)
+net.activate(X1)
+p = argmax(prediction, axis=0)
+print("true output is\t" + str(Y[c]))
+print("predicted output is \t" + str(p))
 
-allData = SupervisedDataSet(n, 10)
+allData = SupervisedDataSet(n, numLabels)
 Y2 = convertToOneOfMany(Y)
 
-for i in range(m):
+'''for i in range(m):
     inData = X[i,:]
     outData = Y2[i, :]
     allData.addSample(inData, outData)
-
-#allData.setField('input', X)
-#allData.setField('target', Y)
+'''
+allData.setField('input', X)
+allData.setField('target', Y2)
 
 #separate training and testing data
 dataTrain, dataTest = allData.splitWithProportion(0.70)
 
-#dataTrain._convertToOneOfMany()
-#dataTest._convertToOneOfMany()
-
-#train = BackpropTrainer(net, learningrate=0.01, momentum=0.9, verbose=True)
-train = BackpropTrainer(net, dataset=dataTrain)
+train = BackpropTrainer(net, dataset=dataTrain, learningrate=0.1, momentum=0.1)
 #train.trainUntilConvergence(dataset=dataTrain)
-'''train.trainEpochs(50)
-resTrain = percentError( train.testOnClassData ( dataset=dataTest ),True )
-resTest = percentError( train.testOnClassData ( dataset=dataTrain ),True )
-'''
 
-for i in range(50):
+trueTrain = dataTrain['target'].argmax(axis=1)
+trueTest = dataTest['target'].argmax(axis=1)
+
+for i in range(20):
     train.trainEpochs(1)
-    trnresult = percentError(train.testOnClassData(dataset=dataTest), True)
-    tstresult = percentError(train.testOnClassData(dataset=dataTrain), True)
-    print("epoch: %4d" % train.totalepochs,"  train error: %5.2f%%" % trnresult,
-              "  test error: %5.2f%%" % tstresult)
+    
+    outTrain = net.activateOnDataset(dataTrain)
+    outTrain = outTrain.argmax(axis=1)
+    resTrain = 100 - percentError(outTrain, trueTrain)
+    
+    outTest = net.activateOnDataset(dataTest)
+    outTest = outTest.argmax(axis=1)
+    resTest = 100 - percentError(outTest, trueTest)
+    
+    print("epoch: %4d" % train.totalepochs,"  train acc: %5.2f%%" % resTrain,
+              "  test acc: %5.2f%%" % resTest)
 
 testNum = plotData(X, Y)
 X1 = X[testNum, :]
