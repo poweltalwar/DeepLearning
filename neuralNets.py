@@ -1,14 +1,14 @@
 import os
 import sys
 from numpy import *
-from numpy import random
+#from numpy import random
 from scipy import io
-import pylab
-from matplotlib import *
+#import pylab
+#from matplotlib import *
 import matplotlib.pyplot as plt
 from pybrain.structure import *
-from pybrain.tools.shortcuts import buildNetwork
-from pybrain.datasets import ClassificationDataSet, SupervisedDataSet
+#from pybrain.tools.shortcuts import buildNetwork
+from pybrain.datasets import SupervisedDataSet
 from pybrain.utilities import percentError
 from pybrain.supervised.trainers import BackpropTrainer
 
@@ -54,7 +54,7 @@ n = n+1
 
 # set sizes of layers
 nInput = n
-nHidden0 = int(n / 5)
+nHidden0 = int(n)
 nOutput = numLabels
 
 # define layer structures
@@ -108,7 +108,7 @@ allData.setField('target', Y2)
 dataTrain, dataTest = allData.splitWithProportion(0.70)
 
 # create object for training
-train = BackpropTrainer(net, dataset=dataTrain, learningrate=0.1, momentum=0.1)
+train = BackpropTrainer(net, dataset=dataTrain, learningrate=0.01, momentum=0.1)
 #train.trainUntilConvergence(dataset=dataTrain)
 
 # evaluate correct output for trainer
@@ -116,7 +116,7 @@ trueTrain = dataTrain['target'].argmax(axis=1)
 trueTest = dataTest['target'].argmax(axis=1)
 
 # train step by step
-EPOCHS = 20
+EPOCHS = 30
 for i in range(EPOCHS):
     train.trainEpochs(1)
 
