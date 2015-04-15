@@ -32,13 +32,12 @@ def convertToOneOfMany(Y):
 
 
 # load data    
-data = io.loadmat('database/num4040.mat')
-size = (40, 40)
+data = io.loadmat('database/num20201.mat')
+size = (20, 20)
 X = data['X']
 [m, n] = shape(X)
 Y = data['Y']
 Y = reshape(Y, (len(Y), -1))
-Y = Y - 1
 
 numLabels = len(unique(Y))
 Y[Y == 10] = 0
@@ -96,7 +95,7 @@ allData.setField('target', Y2)
 dataTrain, dataTest = allData.splitWithProportion(.9)
 
 # create object for training
-train = BackpropTrainer(net, dataset=dataTrain, learningrate=0.001, momentum=0)
+train = BackpropTrainer(net, dataset=dataTrain, learningrate=0.03, momentum=0.3)
 #train.trainUntilConvergence(dataset=dataTrain)
 
 # evaluate correct output for trainer
@@ -104,7 +103,7 @@ trueTrain = dataTrain['target'].argmax(axis=1)
 trueTest = dataTest['target'].argmax(axis=1)
 
 # train step by step
-EPOCHS = 30
+EPOCHS = 60
 
 for i in range(EPOCHS):
     train.trainEpochs(1)
@@ -134,4 +133,4 @@ resTest = 100 - percentError(outTest, trueTest)
 print("epoch: %4d " % train.totalepochs,"\ttrain acc: %5.2f%% " % resTrain,
           "\ttest acc: %5.2f%%" % resTest)
 
-NetworkWriter.writeToFile(net, 'solutions/netTrain4040.xml')
+NetworkWriter.writeToFile(net, 'solutions/netTrain20207.xml')
