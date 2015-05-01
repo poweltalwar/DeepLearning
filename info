@@ -1,0 +1,49 @@
+Datasets
+
+num20201 = 20*20 image, both datasets combined
+
+num2020  = 20*20 image, bigger dataset only
+
+num40401 = 40*40 image, both datasets combined
+
+num4040  = 40*40 image, bigger dataset only
+
+num2020b = 20*20 image, smaller dataset only
+
+num4040b = 40*40 image, smaller dataset only
+
+
+Solutions
+
+use this*****************************
+
+netTrain20207 = 20*20 image, both datasets combine , nHidden=n,   momentum=.3, rate = .03------------
+
+**************************************
+
+
+netTrain20206 = 20*20 image, both datasets combine , nHidden=n,   momentum=.1, rate = .03------------slightly better than 7
+
+netTrain20205 = 20*20 image, both datasets combine , nHidden=n,   momentum=.3, rate = .1-------------97%, best
+
+netTrain20204 = 20*20 image, both datasets combine , nHidden=n,   momentum=.3, rate = .03------------95%, best
+
+netTrain20203 = 20*20 image, both datasets combine , nHidden=n,   momentum=.1, rate = .01------------94%
+
+netTrain20202 = 20*20 image, both datasets combined, nHidden=n,   momentum=0 , rate = .001
+
+netTrain20201 = 20*20 image, bigger dataset only   , nHidden=2*n, momentum=0 , rate = .001
+
+netTrain4040  = 40*40 image, bigger dataset only   , nHidden=n,   momentum=0 , rate = .001
+
+netTrain40401 = 40*40 image, bigger datasets only  , nHidden=n,   momentum=0 , rate = .001
+
+
+
+logTrain202011 = 20*20 image, both datasets combine , Lambda=.03 ,  epsilon = 1.5e-10----------------28%
+
+logTrain202012 = 20*20 image, both datasets combine , Lambda=10 , epsilon = 1.5e-10---------------43%
+
+logTrain202013 = 20*20 image, both datasets combine , Lambda=30---------------71
+
+logTrain202014 = 20*20 image, both datasets combine , Lambda=10 ,  gtol = 10e-5----------------88%
